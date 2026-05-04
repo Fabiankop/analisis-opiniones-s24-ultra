@@ -1,22 +1,28 @@
+"""Análisis de frecuencia de palabras en los comentarios sobre el
+Samsung Galaxy S24 Ultra.
+
+Lee los comentarios de la base SQLite, normaliza el texto, descarta
+stopwords y términos genéricos del producto, y reporta los términos
+más mencionados con un gráfico de barras horizontales.
 """
-Word frequency analysis on extracted comments about the Samsung Galaxy S24
-Ultra. Identifies the most mentioned terms.
-"""
+
+from __future__ import annotations
 
 import re
 import sqlite3
 from collections import Counter
+from pathlib import Path
 
-import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
+import pandas as pd
 from nltk.corpus import stopwords
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DB_PATH = PROJECT_ROOT / "data" / "s24_comments.db"
+FIGURES_DIR = PROJECT_ROOT / "docs" / "figures"
+TABLES_DIR = PROJECT_ROOT / "docs" / "tables"
 
-# -----------------------------------------------------------------------------
-# 1. CONFIGURATION
-# -----------------------------------------------------------------------------
-DB_PATH = "s24_comments.db"
 TOP_N = 12
 
 try:
@@ -25,128 +31,107 @@ except LookupError:
     nltk.download("stopwords", quiet=True)
 
 
-# -----------------------------------------------------------------------------
-# 2. STOPWORD LIST
-# -----------------------------------------------------------------------------
-def get_stopwords():
-    """
-    Build the list of words to ignore:
-    - Standard NLTK Spanish stopwords
-    - Product-specific words that dominate the analysis
-    """
+def get_stopwords() -> set[str]:
     sw = set(stopwords.words("spanish"))
     sw.update([
         "samsung", "galaxy", "s24", "ultra", "smartphone", "celular",
-        "telefono", "tel\u00e9fono", "movil", "m\u00f3vil", "https", "http", "www",
-        "rt", "the", "and", "for", "que", "los", "las", "una", "uno",
-        "ser", "estar", "tener", "hacer",
+        "teléfono", "telefono", "móvil", "movil", "https", "http", "www",
+        "rt", "que", "los", "las", "una", "uno",
+        "ser", "estar", "tener", "hacer", "más", "mas",
     ])
     return sw
 
 
-# -----------------------------------------------------------------------------
-# 3. TEXT CLEANING AND TOKENIZATION
-# -----------------------------------------------------------------------------
-def clean_text(text):
-    """Clean a comment and convert it into a list of words."""
+def clean_text(text: str) -> list[str]:
     text = text.lower()
     text = re.sub(r"http\S+|www\.\S+", "", text)
     text = re.sub(r"[@#]\w+", "", text)
-    text = re.sub(r"[^a-z\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1\u00fc\s]", " ", text)
+    text = re.sub(r"[^a-záéíóúñü\s]", " ", text)
     words = text.split()
-    words = [w for w in words if len(w) >= 3]
-    return words
+    return [w for w in words if len(w) >= 3]
 
 
-def process_comments(texts, sw):
-    """Process all comments and return the flattened list of words."""
-    all_words = []
+def process_comments(texts, sw: set[str]) -> list[str]:
+    all_words: list[str] = []
     for text in texts:
         words = clean_text(text)
-        words = [w for w in words if w not in sw]
-        all_words.extend(words)
+        all_words.extend(w for w in words if w not in sw)
     return all_words
 
 
-# -----------------------------------------------------------------------------
-# 4. FREQUENCY COUNT
-# -----------------------------------------------------------------------------
-def count_frequencies(words, top_n=12):
-    """Count word frequencies and return the most common terms."""
+def count_frequencies(words: list[str], top_n: int = 12) -> tuple[pd.DataFrame, int]:
     counter = Counter(words)
     top = counter.most_common(top_n)
     total = sum(counter.values())
 
-    df = pd.DataFrame(top, columns=["Word", "Frequency"])
-    df["Rank"] = df.index + 1
-    df["% of total"] = (df["Frequency"] / total * 100).round(2)
-    df = df[["Rank", "Word", "Frequency", "% of total"]]
+    df = pd.DataFrame(top, columns=["Palabra", "Frecuencia"])
+    df["Posición"] = df.index + 1
+    df["% del total"] = (df["Frecuencia"] / total * 100).round(2)
+    df = df[["Posición", "Palabra", "Frecuencia", "% del total"]]
     return df, total
 
 
-# -----------------------------------------------------------------------------
-# 5. CHART
-# -----------------------------------------------------------------------------
-def plot_frequencies(df, output_file="word_frequency.png"):
-    """Create a horizontal bar chart of the most frequent words."""
+def plot_frequencies(df: pd.DataFrame, output_file: Path) -> None:
     fig, ax = plt.subplots(figsize=(10, 5.5))
 
-    words = df["Word"][::-1]
-    freqs = df["Frequency"][::-1]
+    words = df["Palabra"][::-1]
+    freqs = df["Frecuencia"][::-1]
 
     colors = ["#1f4e79"] * len(words)
     for i in range(min(3, len(words))):
         colors[-(i + 1)] = "#2e75b6"
 
     ax.barh(words, freqs, color=colors, edgecolor="white")
-    ax.set_xlabel("Frequency")
-    ax.set_title(f"Top {len(df)} words in the comments")
+    ax.set_xlabel("Frecuencia")
+    ax.set_title(f"Top {len(df)} palabras en los comentarios")
 
     for i, freq in enumerate(freqs):
-        ax.text(freq + 5, i, str(freq), va="center", fontsize=9)
+        ax.text(freq + max(freqs) * 0.01, i, str(freq),
+                va="center", fontsize=9)
 
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"  Chart saved: {output_file}")
+    print(f"  Gráfico guardado: {output_file}")
 
 
-# -----------------------------------------------------------------------------
-# 6. MAIN PROGRAM
-# -----------------------------------------------------------------------------
-def main():
+def main() -> None:
     print("=" * 70)
-    print("WORD FREQUENCY ANALYSIS")
+    print("ANÁLISIS DE FRECUENCIA DE PALABRAS")
     print("=" * 70)
 
-    print("\n[1/4] Loading comments...")
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    TABLES_DIR.mkdir(parents=True, exist_ok=True)
+
+    print("\n[1/4] Cargando comentarios...")
     conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql("SELECT text FROM tweets", conn)
     conn.close()
-    print(f"  Total comments: {len(df)}")
+    print(f"  Total de comentarios: {len(df)}")
 
-    print("\n[2/4] Processing text (cleaning and stopword removal)...")
+    print("\n[2/4] Procesando texto (limpieza y stopwords)...")
     sw = get_stopwords()
     words = process_comments(df["text"], sw)
-    print(f"  Total words processed: {len(words):,}")
-    print(f"  Unique vocabulary:     {len(set(words)):,}")
+    print(f"  Palabras procesadas: {len(words):,}")
+    print(f"  Vocabulario único:   {len(set(words)):,}")
 
-    print(f"\n[3/4] Calculating top {TOP_N} words...")
+    print(f"\n[3/4] Calculando top {TOP_N} palabras...")
     result, _total = count_frequencies(words, TOP_N)
     print("\n" + result.to_string(index=False))
 
-    result.to_csv("word_frequency.csv", index=False, encoding="utf-8")
-    print("\n  Table saved: word_frequency.csv")
+    out_csv = TABLES_DIR / "word_frequency.csv"
+    result.to_csv(out_csv, index=False, encoding="utf-8")
+    print(f"\n  Tabla guardada: {out_csv}")
 
-    print("\n[4/4] Generating chart...")
-    plot_frequencies(result)
+    print("\n[4/4] Generando gráfico...")
+    plot_frequencies(result, FIGURES_DIR / "word_frequency.png")
 
     print("\n" + "=" * 70)
-    print("INTERPRETATION")
+    print("INTERPRETACIÓN")
     print("=" * 70)
-    print(f"  Most mentioned word: '{result.iloc[0]['Word']}' "
-          f"({result.iloc[0]['Frequency']} times)")
-    print("  This indicates the topic users discuss the most.")
+    print(f"  Palabra más mencionada: '{result.iloc[0]['Palabra']}' "
+          f"({result.iloc[0]['Frecuencia']} veces)")
+    print("  Esto refleja el tópico más recurrente en la conversación.")
 
 
 if __name__ == "__main__":

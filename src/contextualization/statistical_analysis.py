@@ -1,66 +1,54 @@
-"""
-Statistical analysis of the survey data about the Samsung Galaxy S24 Ultra.
-Calculates mean, median, mode, and standard deviation for each aspect and
-generates the related charts.
+"""Análisis estadístico de la encuesta sobre el Samsung Galaxy S24 Ultra.
+
+Lee las respuestas reales desde ``datos_encuesta.csv`` (escala Likert 1-5
+para seis aspectos del producto) y calcula media, mediana, moda,
+desviación típica y varianza por aspecto. Genera dos figuras:
+distribución apilada por categoría Likert y comparación de
+media/mediana.
 """
 
-import pandas as pd
+from __future__ import annotations
+
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import pandas as pd
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CSV_PATH = PROJECT_ROOT / "datos_encuesta.csv"
+FIGURES_DIR = PROJECT_ROOT / "docs" / "figures"
+TABLES_DIR = PROJECT_ROOT / "docs" / "tables"
+
+ASPECT_COLUMNS = {
+    "camara": "Cámara",
+    "bateria": "Batería",
+    "rendimiento": "Rendimiento",
+    "diseno": "Diseño",
+    "calidad_precio": "Calidad / precio",
+    "software": "Software",
+}
 
 
-# -----------------------------------------------------------------------------
-# 1. SURVEY DATA LOADING
-# -----------------------------------------------------------------------------
-def load_survey_data():
-    """Load survey responses into a DataFrame."""
-    data = {
-        "Camera": [5,5,5,5,5,5,5,5,5,5,5,5,5,
-                   4,4,4,4,4,4,4,4,4,4,4,
-                   3,3,3,3, 2, 1],
-        "Battery": [5,5,5,5,5,5,5,5,
-                    4,4,4,4,4,4,4,4,4,4,
-                    3,3,3,3,3,3,
-                    2,2,2,2, 1,1],
-        "Performance": [5,5,5,5,5,5,5,5,5,5,
-                        4,4,4,4,4,4,4,4,4,4,4,4,
-                        3,3,3,3,3, 2,2, 1],
-        "Design": [5,5,5,5,5,5,5,5,5,5,5,5,5,
-                   4,4,4,4,4,4,4,4,4,4,4,4,
-                   3,3,3,3, 2],
-        "Value for money": [5,5, 4,4,4,4,4,
-                            3,3,3,3,3,3,3,3,3,
-                            2,2,2,2,2,2,2,2,
-                            1,1,1,1,1,1],
-        "Software": [5,5,5,5,5,5,
-                     4,4,4,4,4,4,4,4,4,4,4,4,4,
-                     3,3,3,3,3,3,3,
-                     2,2,2, 1],
-    }
-    return pd.DataFrame(data)
+def load_survey_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Devuelve (subset Likert con columnas en español, dataframe completo)."""
+    df = pd.read_csv(CSV_PATH)
+    likert = df[list(ASPECT_COLUMNS.keys())].rename(columns=ASPECT_COLUMNS)
+    return likert, df
 
 
-# -----------------------------------------------------------------------------
-# 2. STATISTICS CALCULATION
-# -----------------------------------------------------------------------------
-def calculate_statistics(df):
-    """Calculate core statistics for each aspect."""
-    results = pd.DataFrame({
-        "Mean": df.mean().round(2),
-        "Median": df.median().astype(int),
-        "Mode": df.mode().iloc[0].astype(int),
-        "Std. dev.": df.std().round(2),
-        "Variance": df.var().round(2),
-        "Min": df.min(),
-        "Max": df.max(),
+def calculate_statistics(df: pd.DataFrame) -> pd.DataFrame:
+    return pd.DataFrame({
+        "Media": df.mean().round(2),
+        "Mediana": df.median().astype(int),
+        "Moda": df.mode().iloc[0].astype(int),
+        "Desv. típica": df.std().round(2),
+        "Varianza": df.var().round(2),
+        "Mín": df.min(),
+        "Máx": df.max(),
     })
-    return results
 
 
-# -----------------------------------------------------------------------------
-# 3. CHARTS
-# -----------------------------------------------------------------------------
-def plot_distribution(df, output_file="likert_distribution.png"):
-    """Create a stacked bar chart of the response distribution."""
+def plot_distribution(df: pd.DataFrame, output_file: Path) -> None:
     counts = pd.DataFrame(
         {col: df[col].value_counts().reindex(range(1, 6), fill_value=0)
          for col in df.columns}
@@ -68,84 +56,86 @@ def plot_distribution(df, output_file="likert_distribution.png"):
 
     colors = ["#d32f2f", "#f57c00", "#fdd835", "#7cb342", "#388e3c"]
     labels = [
-        "Strongly disagree",
-        "Disagree",
-        "Neutral",
-        "Agree",
-        "Strongly agree",
+        "Muy en desacuerdo (1)",
+        "En desacuerdo (2)",
+        "Neutral (3)",
+        "De acuerdo (4)",
+        "Muy de acuerdo (5)",
     ]
 
     fig, ax = plt.subplots(figsize=(10, 5.5))
     counts.plot(kind="bar", stacked=True, ax=ax, color=colors,
                 edgecolor="white")
-    ax.set_ylabel("Number of respondents")
-    ax.set_title("Likert response distribution by aspect")
+    ax.set_ylabel("Número de respondientes")
+    ax.set_title("Distribución de respuestas Likert por aspecto")
     ax.legend(labels, loc="upper center",
               bbox_to_anchor=(0.5, -0.15), ncol=5, fontsize=9)
     plt.xticks(rotation=0)
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"  Chart saved: {output_file}")
+    print(f"  Gráfico guardado: {output_file}")
 
 
-def plot_averages(stats, output_file="averages.png"):
-    """Create a bar chart with mean and median values."""
+def plot_averages(stats: pd.DataFrame, output_file: Path) -> None:
     fig, ax = plt.subplots(figsize=(10, 5))
     x = range(len(stats))
     width = 0.35
 
-    ax.bar([i - width / 2 for i in x], stats["Mean"],
-           width, label="Mean", color="#1f4e79")
-    ax.bar([i + width / 2 for i in x], stats["Median"],
-           width, label="Median", color="#2e75b6")
+    ax.bar([i - width / 2 for i in x], stats["Media"],
+           width, label="Media", color="#1f4e79")
+    ax.bar([i + width / 2 for i in x], stats["Mediana"],
+           width, label="Mediana", color="#2e75b6")
     ax.axhline(y=3, color="gray", linestyle="--",
-               linewidth=0.8, label="Neutral point")
+               linewidth=0.8, label="Punto neutral")
 
-    ax.set_ylabel("Likert value (1-5)")
-    ax.set_title("Mean and median by aspect")
+    ax.set_ylabel("Valor Likert (1-5)")
+    ax.set_title("Media y mediana por aspecto")
     ax.set_xticks(x)
-    ax.set_xticklabels(stats.index, rotation=0)
+    ax.set_xticklabels(stats.index, rotation=15, ha="right")
     ax.set_ylim(0, 5.5)
     ax.legend()
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"  Chart saved: {output_file}")
+    print(f"  Gráfico guardado: {output_file}")
 
 
-# -----------------------------------------------------------------------------
-# 4. MAIN PROGRAM
-# -----------------------------------------------------------------------------
-def main():
+def main() -> None:
     print("=" * 70)
-    print("SURVEY STATISTICAL ANALYSIS")
+    print("ANÁLISIS ESTADÍSTICO DE LA ENCUESTA")
     print("=" * 70)
 
-    print("\n[1/3] Loading survey data...")
-    df = load_survey_data()
-    print(f"  Respondents: {len(df)}")
-    print(f"  Aspects:     {len(df.columns)}")
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
-    print("\n[2/3] Calculating statistics...")
-    stats = calculate_statistics(df)
+    print("\n[1/3] Cargando datos de la encuesta...")
+    likert, full = load_survey_data()
+    print(f"  Respondientes: {len(likert)}")
+    print(f"  Aspectos:      {len(likert.columns)}")
+    print(f"  Demografía:    edad media = {full['edad'].mean():.1f} años, "
+          f"género: {full['genero'].value_counts().to_dict()}")
+
+    print("\n[2/3] Calculando estadísticas...")
+    stats = calculate_statistics(likert)
     print("\n" + str(stats))
 
-    stats.to_csv("survey_statistics.csv", encoding="utf-8")
-    print("\n  Table saved: survey_statistics.csv")
+    out_csv = TABLES_DIR / "survey_statistics.csv"
+    stats.to_csv(out_csv, encoding="utf-8")
+    print(f"\n  Tabla guardada: {out_csv}")
 
-    print("\n[3/3] Generating charts...")
-    plot_distribution(df)
-    plot_averages(stats)
+    print("\n[3/3] Generando gráficos...")
+    plot_distribution(likert, FIGURES_DIR / "likert_distribution.png")
+    plot_averages(stats, FIGURES_DIR / "averages.png")
 
     print("\n" + "=" * 70)
-    print("AUTOMATED INTERPRETATION")
+    print("INTERPRETACIÓN AUTOMÁTICA")
     print("=" * 70)
-    best = stats["Mean"].idxmax()
-    worst = stats["Mean"].idxmin()
-    print(f"  Best-rated aspect: {best} (mean = {stats['Mean'][best]})")
-    print(f"  Lowest-rated aspect: {worst} (mean = {stats['Mean'][worst]})")
-    print(f"  Overall average: {stats['Mean'].mean():.2f}")
+    best = stats["Media"].idxmax()
+    worst = stats["Media"].idxmin()
+    print(f"  Aspecto mejor calificado: {best} (media = {stats['Media'][best]})")
+    print(f"  Aspecto peor calificado:  {worst} (media = {stats['Media'][worst]})")
+    print(f"  Promedio general:         {stats['Media'].mean():.2f}")
 
 
 if __name__ == "__main__":

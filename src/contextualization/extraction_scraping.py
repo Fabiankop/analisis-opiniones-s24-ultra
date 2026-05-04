@@ -13,12 +13,6 @@ import tweepy
 # -----------------------------------------------------------------------------
 # 1. CONFIGURATION
 # -----------------------------------------------------------------------------
-BEARER_TOKEN = os.environ.get("X_BEARER_TOKEN")
-if not BEARER_TOKEN:
-    raise ValueError(
-        "Token not found. Set the X_BEARER_TOKEN environment variable."
-    )
-
 QUERY = (
     '("Galaxy S24 Ultra" OR #GalaxyS24Ultra OR #GalaxyAI) '
     'lang:es -is:retweet'
@@ -26,6 +20,16 @@ QUERY = (
 
 MAX_TWEETS = 1500
 DB_PATH = "s24_comments.db"
+
+
+def _get_bearer_token() -> str:
+    token = os.environ.get("X_BEARER_TOKEN")
+    if not token:
+        raise ValueError(
+            "Token no encontrado. Define la variable de entorno "
+            "X_BEARER_TOKEN."
+        )
+    return token
 
 
 # -----------------------------------------------------------------------------
@@ -105,7 +109,8 @@ def main():
     print(f"Start: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
     print("[1/3] Connecting to X API...")
-    client = tweepy.Client(bearer_token=BEARER_TOKEN, wait_on_rate_limit=True)
+    bearer_token = _get_bearer_token()
+    client = tweepy.Client(bearer_token=bearer_token, wait_on_rate_limit=True)
 
     print("[2/3] Preparing local database...")
     conn = create_database(DB_PATH)

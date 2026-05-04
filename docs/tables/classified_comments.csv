@@ -1,0 +1,54 @@
+tweet_id,text,sentimiento
+demo-0001,"El zoom 100x del S24 Ultra es absurdo, le tomé fotos a la luna y se ven brutales",negativo
+demo-0002,"La cámara nocturna del Galaxy S24 Ultra le da vueltas al iPhone 15 Pro Max, sin discusión",positivo
+demo-0003,Probé la cámara del S24 Ultra en un concierto y los detalles del escenario quedaron impecables,negativo
+demo-0004,"Las fotos del S24 Ultra con galaxy AI quedan súper nítidas, el procesamiento es muy bueno",positivo
+demo-0005,El S Pen y la cámara del S24 Ultra son una combinación demasiado pro para crear contenido,negativo
+demo-0006,"La cámara del S24 Ultra está bien pero a veces sobreprocesa los colores, queda muy artificial",neutral
+demo-0007,"El zoom del S24 Ultra es bueno hasta 30x, después ya pierde demasiado detalle",neutral
+demo-0008,"Esperaba más de la cámara del Galaxy S24 Ultra al precio que tiene, es buena pero no excepcional",neutral
+demo-0009,"La batería del S24 Ultra me dura todo el día con uso normal, muy contento",positivo
+demo-0010,Con uso intensivo de cámara y juegos la batería del S24 Ultra apenas llega al final del día,positivo
+demo-0011,La duración de la batería del S24 Ultra es buena pero la carga rápida sigue limitada a 45W,neutral
+demo-0012,"Mi S24 Ultra dura un día y medio si solo uso redes y mensajería, súper",positivo
+demo-0013,La bateria del S24 Ultra se descarga rápido cuando uso galaxy AI mucho rato,negativo
+demo-0014,"Nada del otro mundo la batería del S24 Ultra, esperaba más por el precio que pagué",negativo
+demo-0015,"El Snapdragon 8 Gen 3 del S24 Ultra vuela, no he visto un solo lag en 3 meses",neutral
+demo-0016,"Juego Genshin Impact en ultra y el S24 Ultra ni se inmuta, rendimiento brutal",positivo
+demo-0017,"El S24 Ultra se calienta bastante con juegos pesados, no es el mejor para gaming intensivo",neutral
+demo-0018,"Mi S24 Ultra se calienta cuando uso la cámara mucho rato, no me esperaba eso",negativo
+demo-0019,"Cero lag, fluidez total, el rendimiento del S24 Ultra es de otro nivel",negativo
+demo-0020,El diseño en titanio del S24 Ultra se siente muy premium en la mano,neutral
+demo-0021,"Me encanta lo cuadrado del S24 Ultra, le da un look muy serio y profesional",positivo
+demo-0022,"El S24 Ultra es enorme y pesado, no es cómodo para usar con una sola mano",negativo
+demo-0023,"El tamaño del S24 Ultra no me convence, es demasiado grande para el bolsillo",negativo
+demo-0024,El acabado del titanio del Galaxy S24 Ultra se ve hermoso pero atrae demasiadas huellas,neutral
+demo-0025,"El diseño del S24 Ultra es elegante pero ya está cansado, llevan años con la misma idea",negativo
+demo-0026,"El precio del Galaxy S24 Ultra es ridículo, vale más que mi laptop",negativo
+demo-0027,"Por ese precio del S24 Ultra prefiero un iPhone, no le veo la diferencia que justifique",neutral
+demo-0028,El S24 Ultra está caro pero se siente que estás pagando por calidad de verdad,neutral
+demo-0029,"Esperar a que el precio del S24 Ultra baje fue la mejor decisión, ahora vale la pena",positivo
+demo-0030,"El precio del S24 Ultra está totalmente sobreestimado, la diferencia con el S24+ no la justifica",negativo
+demo-0031,Pagué más de 6 millones por el S24 Ultra y la verdad no siento que valga tanto,negativo
+demo-0032,"Galaxy AI del S24 Ultra cambió mi forma de usar el celular, las traducciones en vivo son magia",positivo
+demo-0033,Circle to Search de Galaxy AI es la mejor función que han metido en años,positivo
+demo-0034,"One UI 6 en el S24 Ultra está muy fluida, me gusta el rediseño",positivo
+demo-0035,"El bloatware preinstalado en el S24 Ultra es molesto, viene con muchas apps que no se pueden quitar",negativo
+demo-0036,"Las funciones de IA del S24 Ultra son útiles pero algunas estarán pagas después de 2025, eso no me gusta",negativo
+demo-0037,"Samsung promete 7 años de actualizaciones para el S24 Ultra, eso sí es un golazo",neutral
+demo-0038,La transcripción de notas de voz del S24 Ultra con galaxy AI funciona increíble en español,positivo
+demo-0039,"El S Pen del S24 Ultra sigue siendo único en el mercado, no hay nada igual para tomar notas",positivo
+demo-0040,"Casi no uso el S Pen del S24 Ultra, la verdad es un agregado que pagué pero no aprovecho",negativo
+demo-0041,El S Pen del S24 Ultra es perfecto para firmar documentos y editar fotos al detalle,positivo
+demo-0042,Si no usas el lápiz del S24 Ultra estás desperdiciando la mitad del celular,negativo
+demo-0043,"La pantalla AMOLED del S24 Ultra es la mejor del mercado, brillo brutal a pleno sol",positivo
+demo-0044,"El brillo de la pantalla del S24 Ultra es absurdo, se ve perfecto en exteriores",negativo
+demo-0045,"Los reflejos de la nueva pantalla del S24 Ultra mejoraron mucho, ya no es tan molesto el sol",positivo
+demo-0046,"Llevo dos meses con el Galaxy S24 Ultra y sigo descubriendo cosas, vale la pena el cambio",positivo
+demo-0047,"Cambié de iPhone al S24 Ultra y no me arrepiento, Android maduró un montón",positivo
+demo-0048,El S24 Ultra tiene buen hardware pero el software a veces se siente pesado,neutral
+demo-0049,"Vendí mi S24 Ultra a los 2 meses, no le encontré el valor que prometían las reviews",negativo
+demo-0050,"Mi S24 Ultra se ha portado de maravilla, sin un solo bug en 4 meses de uso",positivo
+demo-0051,El Galaxy S24 Ultra es excelente pero no es para todos por su tamaño y precio,neutral
+demo-0052,"Compré el S24 Ultra y lo recomiendo si vienes de un Android viejo, el salto es enorme",positivo
+demo-0053,Comparado con el iPhone 15 Pro Max el S24 Ultra ofrece más funciones pero menos pulido en general,neutral

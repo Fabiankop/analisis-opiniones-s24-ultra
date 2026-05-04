@@ -58,3 +58,8 @@ word_frequency.csv
 # Raw survey data and any other personally identifiable inputs.
 # If anonymized and cleared for publication, force-add explicitly.
 data/
+
+# --- Excepciones: evidencia del entregable académico ---
+# Las salidas dentro de docs/ son artefactos del documento (no datos
+# crudos). Se versionan para que sirvan de evidencia reproducible.
+!docs/**
