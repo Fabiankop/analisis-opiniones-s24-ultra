@@ -1,0 +1,18 @@
+# =====================================================================
+# Dependencias del proyecto
+# Análisis de opiniones - Samsung Galaxy S24 Ultra
+# =====================================================================
+# Instalación:  pip install -r requirements.txt
+# =====================================================================
+
+# Web scraping
+tweepy==4.14.0
+
+# Manejo de datos y gráficos
+pandas==2.2.0
+matplotlib==3.8.2
+
+# Procesamiento de lenguaje natural
+nltk==3.8.1
+transformers==4.38.0
+torch==2.2.0

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contextualization-stage"
+version = "0.1.0"
+description = "Análisis de opiniones - Samsung Galaxy S24 Ultra (etapa de contextualización)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "tweepy==4.14.0",
+    "pandas==2.2.0",
+    "matplotlib==3.8.2",
+    "nltk==3.8.1",
+    "transformers==4.38.0",
+    "torch==2.2.0",
+]
+
+[project.scripts]
+contextualization = "contextualization.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

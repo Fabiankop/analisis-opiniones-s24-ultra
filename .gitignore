@@ -1,0 +1,60 @@
+# --- Claude Code ---
+.claude/
+
+# --- Virtual environments ---
+env/
+venv/
+.venv/
+ENV/
+
+# --- Python bytecode ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --- Packaging / build artifacts ---
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Logs / caches ---
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Secrets / env vars ---
+.env
+.env.*
+!.env.example
+
+# --- Generated outputs (analysis pipeline) ---
+*.db
+*.sqlite
+*.sqlite3
+*.png
+*.jpg
+*.jpeg
+classified_comments.csv
+sentiment_by_aspect.csv
+survey_statistics.csv
+word_frequency.csv
+
+# --- Personal data (Law 1581/2012 — Colombia) ---
+# Raw survey data and any other personally identifiable inputs.
+# If anonymized and cleared for publication, force-add explicitly.
+data/
