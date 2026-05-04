@@ -1,7 +1,7 @@
 # Análisis de opiniones — Samsung Galaxy S24 Ultra
 
 Scripts en Python que acompañan al trabajo académico de la asignatura
-**Recolección y extracción de datos masivos**.
+**Técnicas de Extracción y Almacenamiento de Datos Masivos**.
 
 ## Estructura de archivos
 
@@ -10,7 +10,7 @@ Scripts en Python que acompañan al trabajo académico de la asignatura
 # Opinion Analysis — Samsung Galaxy S24 Ultra
 
 Python scripts that accompany the academic work for the course
-**Large-scale data collection and extraction**.
+**Big Data Extraction and Storage Techniques**.
 
 ## Project structure
 
@@ -133,7 +133,7 @@ Regime in Colombia) via:
 
 ## Author
 
-[Student name]
-[Academic program]
-[Institution]
+Fabian Rodríguez
+Técnicas de Extracción y Almacenamiento de Datos Masivos
+Fundación Universitaria Compensar
 2026
